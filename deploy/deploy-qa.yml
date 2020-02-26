@@ -1,4 +1,12 @@
 - hosts: qa
   become: yes
-  tasks:
-    - shell: docker service create --replicas 3 --name addressbook-app -p 8080:8080 avnibansal2611/addressapp:{{ build }}
+  tasks: 
+    - name: remove any previous app services
+      shell: | 
+         if [ `docker service ls | grep -v NAME | grep addressbook-app | awk '{print $2}' | wc -l` -gt 0 ]; then  
+            docker service rm `docker service ls | grep -v NAME | grep addressbook-app | awk '{print $2}'`
+         else 
+            echo "No Service found"
+         fi
+    - name: deploy app
+      command: docker service create --replicas 3 --name addressbook-app -p 8080:8080 avnibansal2611/addressapp:{{ build }}
