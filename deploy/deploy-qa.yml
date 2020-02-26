@@ -1,4 +1,4 @@
 - hosts: qa
   become: yes
   tasks:
-    - shell: docker run -d -P lerndevops/samplejavaapp:{{ build }}
+    - shell: docker service create --replicas 3 --name addressbook-app -p 8080:8080 avnibansal2611/addressapp:{{ build }}
